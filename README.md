@@ -7,9 +7,9 @@ Provides an easy way to create a RESTful CRUD for your entities.
 ## Full Default Configuration
 
 ```yaml
-zenstruck_crud:
-    default_controller_class:  Zenstruck\CrudBundle\Controller\ResourceController
-    controller_utils_class:  Zenstruck\CrudBundle\Controller\ControllerUtil
+zenstruck_resource:
+    default_controller_class:  Zenstruck\ResourceBundle\Controller\ResourceController
+    controller_utils_class:  Zenstruck\ResourceBundle\Controller\ControllerUtil
     controllers:
 
         # Prototype
@@ -36,7 +36,7 @@ zenstruck_crud:
                 disabled_actions:     [] # Example: [show, list]
                 prefix:               /
                 default_format:       html
-                formats:              html
+                formats:              html # Example: html|json
 
                 # Additional routes for this resource.
                 extra_routes:

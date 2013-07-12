@@ -34,7 +34,7 @@ class Configuration implements ConfigurationInterface
                                     ->variableNode('disabled_actions')->defaultValue(array())->info('An array of disabled actions. Allowed values: list, show, new, post, edit, put, delete.')->example('[show, list]')->end()
                                     ->scalarNode('prefix')->defaultValue('/')->end()
                                     ->scalarNode('default_format')->defaultValue('html')->end()
-                                    ->scalarNode('formats')->defaultValue('html')->end()
+                                    ->scalarNode('formats')->defaultValue('html')->example('html|json')->end()
                                     ->arrayNode('extra_routes')->info('Additional routes for this resource.')
                                         ->example(array(
                                             'promote' => array(
