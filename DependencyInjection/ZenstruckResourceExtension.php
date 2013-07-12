@@ -36,7 +36,7 @@ class ZenstruckResourceExtension extends Extension
             if (!$controllerId) {
                 // build controller id based on bundle and controller name (ie AppBundle:Post becomse app.controller.post)
                 preg_match('/^([\w]+)Bundle/', $controller['entity'], $matches);
-                $controllerId = sprintf('%s.controller.%s', $matches[1], $name);
+                $controllerId = sprintf('%s.controller.%s', strtolower($matches[1]), $name);
             }
 
             $controller['service_id'] = $controllerId;
