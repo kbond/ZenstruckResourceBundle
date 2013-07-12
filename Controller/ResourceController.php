@@ -17,7 +17,7 @@ class ResourceController extends AbstractResourceController
             ));
     }
 
-    public function getAction($id, Request $request)
+    public function showAction($id, Request $request)
     {
         return $this->renderResponse(Resource::ACTION_SHOW, array(
                 $this->resource->getEntityName(true) => $this->findEntity($id)
