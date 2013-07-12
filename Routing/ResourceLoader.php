@@ -101,6 +101,10 @@ class ResourceLoader extends Loader
             '_format' => $routing->getFormats()
         );
 
+        if (in_array($action, array(Resource::ACTION_EDIT, Resource::ACTION_PUT, Resource::ACTION_SHOW, Resource::ACTION_DELETE))) {
+            $requirements['id'] = '\d+';
+        }
+
         $routes->add($resource->getRouteName($action), new Route($pattern, $defaults, $requirements));
     }
 }
