@@ -23,11 +23,11 @@ class ZenstruckResourceExtension extends Extension
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
 
         $loader->load('services.xml');
-        $container->setParameter('zenstruck_crud.controller_utils.class', $config['controller_utils_class']);
+        $container->setParameter('zenstruck_resource.controller_utils.class', $config['controller_utils_class']);
 
-        $utilDef = $container->getDefinition('zenstruck_crud.controller_utils');
-        $routeLoaderDef = $container->getDefinition('zenstruck_crud.routing_loader');
-        $resourceClass = $container->getParameter('zenstruck_crud.resource.class');
+        $utilDef = $container->getDefinition('zenstruck_resource.controller_utils');
+        $routeLoaderDef = $container->getDefinition('zenstruck_resource.routing_loader');
+        $resourceClass = $container->getParameter('zenstruck_resource.resource.class');
 
         foreach ($config['controllers'] as $name => $controller) {
             $controllerClass = $controller['controller_class'] ?: $config['default_controller_class'];

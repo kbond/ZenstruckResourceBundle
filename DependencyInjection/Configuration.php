@@ -13,12 +13,12 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('zenstruck_crud');
+        $rootNode = $treeBuilder->root('zenstruck_resource');
 
         $rootNode
             ->children()
-                ->scalarNode('default_controller_class')->defaultValue('Zenstruck\CrudBundle\Controller\ResourceController')->end()
-                ->scalarNode('controller_utils_class')->defaultValue('Zenstruck\CrudBundle\Controller\ControllerUtil')->end()
+                ->scalarNode('default_controller_class')->defaultValue('Zenstruck\ResourceBundle\Controller\ResourceController')->end()
+                ->scalarNode('controller_utils_class')->defaultValue('Zenstruck\ResourceBundle\Controller\ControllerUtil')->end()
                 ->arrayNode('controllers')
                     ->useAttributeAsKey('name')
                     ->prototype('array')
