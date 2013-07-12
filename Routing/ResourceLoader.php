@@ -2,6 +2,7 @@
 
 namespace Zenstruck\ResourceBundle\Routing;
 
+use Doctrine\Common\Inflector\Inflector;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
@@ -57,7 +58,7 @@ class ResourceLoader extends Loader
                 $pattern = sprintf('/%s%s.{_format}', $resource->getPluralName(true), $extraRoute['pattern']);
 
                 $defaults = array(
-                    '_controller' => sprintf('%s:%sAction', $resource->getServiceId(), $name),
+                    '_controller' => sprintf('%s:%sAction', $resource->getServiceId(), Inflector::camelize($name)),
                     '_format' => $extraRoute['default_format']
                 );
 
