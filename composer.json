@@ -1,0 +1,22 @@
+{
+    "name": "zenstruck/resource-bundle",
+    "description": "Provides an easy way to create a RESTful CRUD for your entities.",
+    "keywords": ["crud", "resource", "administration", "admin"],
+    "homepage": "http://zenstruck.com/project/ZenstruckResourceBundle",
+    "type": "symfony-bundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Kevin Bond",
+            "email": "kevinbond@gmail.com"
+        }
+    ],
+    "require": {
+        "symfony/symfony": "~2.3",
+        "doctrine/inflector": "~1.0.0"
+    },
+    "autoload": {
+        "psr-0": { "Zenstruck\\ResourceBundle": "" }
+    },
+    "target-dir": "Zenstruck/ResourceBundle"
+}
