@@ -2,8 +2,12 @@
 
 namespace Zenstruck\ResourceBundle\Controller;
 
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
+use Zenstruck\DataGridBundle\Grid;
+use Zenstruck\DataGridBundle\Pager\PagerInterface;
+use Zenstruck\DataGridBundle\PaginatedGrid;
 use Zenstruck\ResourceBundle\Config\Resource;
 
 /**
@@ -83,6 +87,25 @@ abstract class AbstractResourceController
     protected function postRedirect($action = null)
     {
         return $this->util->redirect($this->util->generateUrl($this->resource->getDefaultRoute()));
+    }
+
+    /**
+     * @param Request $request
+     * @return \Zenstruck\DataGridBundle\Grid|null
+     */
+    protected function getGrid(Request $request)
+    {
+        $gridId = str_replace('controller', 'grid', $this->resource->getServiceId());
+
+        if ($grid = $this->util->get($gridId, ContainerInterface::NULL_ON_INVALID_REFERENCE)) {
+            if ($grid instanceof PaginatedGrid) {
+                return $grid->execute($request->get('page', 1), $request->get('max_per_page', PagerInterface::DEFAULT_MAX_PER_PAGE));
+            } elseif ($grid instanceof Grid) {
+                return $grid->execute();
+            }
+        }
+
+        return null;
     }
 
     /**

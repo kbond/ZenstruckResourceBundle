@@ -12,6 +12,12 @@ class ResourceController extends AbstractResourceController
 {
     public function listAction(Request $request)
     {
+        if ($grid = $this->getGrid($request)) {
+            return $this->renderResponse(Resource::ACTION_LIST, array(
+                    'grid' => $grid
+                ));
+        }
+
         return $this->renderResponse(Resource::ACTION_LIST, array(
                 $this->resource->getPluralName(true) => $this->getCollection()
             ));
