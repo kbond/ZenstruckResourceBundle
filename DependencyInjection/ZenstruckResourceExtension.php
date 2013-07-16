@@ -6,14 +6,14 @@ use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Extension\Extension;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-class ZenstruckResourceExtension extends Extension
+class ZenstruckResourceExtension extends Extension implements PrependExtensionInterface
 {
     public function load(array $config, ContainerBuilder $container)
     {
@@ -54,5 +54,33 @@ class ZenstruckResourceExtension extends Extension
             $container->setDefinition($controllerId.'.config', $configDef);
             $container->setDefinition($controllerId, $controllerDef);
         }
+    }
+
+    public function prepend(ContainerBuilder $container)
+    {
+        $bundles = $container->getParameter('kernel.bundles');
+
+        if (!isset($bundles['ZenstruckDataGridBundle'])) {
+            return;
+        }
+
+        $datagridConfig = array();
+        $configs = $container->getExtensionConfig($this->getAlias());
+        $config = $this->processConfiguration(new Configuration(), $configs);
+
+        foreach ($config['controllers'] as $name => $controller) {
+            if (!$controller['grid']['enabled']) {
+                continue;
+            }
+
+            unset($controller['grid']['enabled']);
+
+            $datagridConfig['grids'][$name] = array_merge(
+                array('entity' => $controller['entity']),
+                $controller['grid']
+            );
+        }
+
+        $container->prependExtensionConfig('zenstruck_datagrid', $datagridConfig);
     }
 }

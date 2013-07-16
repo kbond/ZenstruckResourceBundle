@@ -15,7 +15,7 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('zenstruck_resource');
 
-        $rootNode
+        $node = $rootNode
             ->children()
                 ->scalarNode('default_controller_class')->defaultValue('Zenstruck\ResourceBundle\Controller\ResourceController')->end()
                 ->scalarNode('controller_utils_class')->defaultValue('Zenstruck\ResourceBundle\Controller\ControllerUtil')->end()
@@ -57,11 +57,20 @@ class Configuration implements ConfigurationInterface
                                     ->end()
                                 ->end()
                             ->end()
-                        ->end()
-                    ->end()
-                ->end()
-            ->end()
         ;
+
+        if (class_exists('Zenstruck\DataGridBundle\DependencyInjection\Configuration')) {
+            $dataGridConfig = new \Zenstruck\DataGridBundle\DependencyInjection\Configuration();
+
+            $node = $node
+                ->arrayNode('grid')
+                    ->info('The grid option is available when ZenstruckDataGridBundle is installed.')
+                    ->canBeEnabled()
+                    ->children()
+            ;
+
+            $dataGridConfig->addGridConfig($node);
+        }
 
         return $treeBuilder;
     }
