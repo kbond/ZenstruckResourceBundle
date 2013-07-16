@@ -2,10 +2,12 @@
 
 namespace Zenstruck\ResourceBundle\Controller;
 
+use Doctrine\Common\Inflector\Inflector;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Zenstruck\DataGridBundle\Grid;
 use Zenstruck\ResourceBundle\Config\Resource;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -33,9 +35,11 @@ abstract class AbstractResourceController
 
     protected function processNew(Request $request)
     {
+        $action = Resource::ACTION_NEW;
+        $this->checkPermissions($action);
+
         $entity = $this->createEntity();
         $form = $this->createForm($entity);
-        $action = Resource::ACTION_NEW;
 
         if ('POST' === $request->getMethod()) {
             if ($form->submit($request)->isValid()) {
@@ -50,9 +54,11 @@ abstract class AbstractResourceController
 
     protected function processEdit($id, Request $request)
     {
+        $action = Resource::ACTION_EDIT;
+        $this->checkPermissions($action);
+
         $entity = $this->findEntity($id);
         $form = $this->createForm($entity);
-        $action = Resource::ACTION_EDIT;
 
         if ('PUT' === $request->getMethod()) {
             if ($form->submit($request)->isValid()) {
@@ -70,10 +76,13 @@ abstract class AbstractResourceController
 
     protected function processDelete($id, Request $request)
     {
+        $action = Resource::ACTION_DELETE;
+        $this->checkPermissions($action);
+
         $entity = $this->findEntity($id);
         $this->deleteEntity($entity);
 
-        return $this->postRedirect(Resource::ACTION_DELETE);
+        return $this->postRedirect($action);
     }
 
     /**
@@ -84,6 +93,32 @@ abstract class AbstractResourceController
     protected function postRedirect($action = null)
     {
         return $this->util->redirect($this->util->generateUrl($this->resource->getDefaultRoute()));
+    }
+
+    protected function checkPermissions($action)
+    {
+        $permissions = $this->resource->getPermissions();
+
+        switch ($permissions) {
+            case Resource::PERMISSION_NONE:
+                return;
+
+            case Resource::PERMISSION_SIMPLE:
+                $role = sprintf('ROLE_%s_ADMIN', strtoupper(Inflector::tableize($this->resource->getEntityName())));
+                break;
+
+            default:
+                $role = sprintf(
+                    'ROLE_%s_%s',
+                    strtoupper(Inflector::tableize($this->resource->getEntityName())),
+                    strtoupper($action)
+                );
+                break;
+        }
+
+        if (!$this->util->get('security.context')->isGranted($role)) {
+            throw new AccessDeniedException();
+        }
     }
 
     /**

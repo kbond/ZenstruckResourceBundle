@@ -29,6 +29,10 @@ zenstruck_resource:
 
             # The default route to use after create/edit/delete actions.  Defaults to the "list" action if enabled or "homepage" if not.
             default_route:        ~
+
+            # none: disables permission checking, simple: checks for ROLE_<NAME>_ADMIN on new/edit/delete actions, full: checks for ROLE_<NAME>_<ACTION> on new/edit/delete actions.
+            permissions:          none
+
             routing:
                 enabled:              false
 
@@ -54,4 +58,32 @@ zenstruck_resource:
                         methods:              GET
                         formats:              html
                         default_format:       html
+
+            # The grid option is available when ZenstruckDataGridBundle is installed.
+            grid:
+                enabled:              false
+
+                # The service id for the generated grid. By default it is: "<bundle_prefix>.grid.<grid_name>".
+                service_id:           ~
+
+                # Customize the grid executor (must implement ExecutorInterface)
+                executor_service:     ~
+
+                # Whether or not to use a paginated grid.
+                paginated:            true
+                fields:
+
+                    # Prototype
+                    name:
+                        label:                ~
+
+                        # Set false to hide on display (can still be filtered/sorted)
+                        visible:              true
+                        filterable:           false
+                        filter_value:         ~
+                        sortable:             false
+                        sort_direction:       ASC
+                        format:               ~
+                        align:                ~
+                        default:              ~
 ```

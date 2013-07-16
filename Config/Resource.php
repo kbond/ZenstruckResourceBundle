@@ -20,11 +20,16 @@ class Resource
     const ACTION_PUT    = 'put';
     const ACTION_DELETE = 'delete';
 
+    const PERMISSION_NONE   = 'none';
+    const PERMISSION_SIMPLE = 'simple';
+    const PERMISSION_FULL   = 'full';
+
     protected $entity;
     protected $formClass;
     protected $entityName;
     protected $pluralName;
     protected $serviceId;
+    protected $permissions;
     protected $defaultRoute;
 
     /** @var Routing */
@@ -36,6 +41,7 @@ class Resource
         $this->formClass = $config['form_class'];
         $this->serviceId = $config['service_id'];
         $this->defaultRoute = $config['default_route'];
+        $this->permissions = $config['permissions'];
         $this->routing = new Routing($config['routing']);
 
         // get class name without namespace
@@ -103,5 +109,13 @@ class Resource
     public function getRouting()
     {
         return $this->routing;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPermissions()
+    {
+        return $this->permissions;
     }
 }

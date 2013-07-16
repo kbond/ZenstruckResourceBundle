@@ -4,6 +4,7 @@ namespace Zenstruck\ResourceBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
+use Zenstruck\ResourceBundle\Config\Resource;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -12,6 +13,7 @@ class Configuration implements ConfigurationInterface
 {
     public function getConfigTreeBuilder()
     {
+        $validPermissions = array(Resource::PERMISSION_NONE, Resource::PERMISSION_SIMPLE, Resource::PERMISSION_FULL);
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('zenstruck_resource');
 
@@ -28,6 +30,14 @@ class Configuration implements ConfigurationInterface
                             ->scalarNode('controller_id')->defaultNull()->info('The service id for the generated controller. By default it is: "<bundle_prefix>.controller.<resource_name>".')->end()
                             ->scalarNode('form_class')->defaultNull()->info('The optional FQN of the form. It defaults to the Symfony2 standard for the resource.')->end()
                             ->scalarNode('default_route')->defaultNull()->info('The default route to use after create/edit/delete actions.  Defaults to the "list" action if enabled or "homepage" if not.')->end()
+                            ->scalarNode('permissions')
+                                ->defaultValue(Resource::PERMISSION_NONE)
+                                ->validate()
+                                    ->ifNotInArray($validPermissions)
+                                    ->thenInvalid(sprintf('Must be one of the following: %s', implode(', ', $validPermissions)))
+                                ->end()
+                                ->info('none: disables permission checking, simple: checks for ROLE_<NAME>_ADMIN on new/edit/delete actions, full: checks for ROLE_<NAME>_<ACTION> on new/edit/delete actions.')
+                            ->end()
                             ->arrayNode('routing')
                                 ->canBeEnabled()
                                 ->children()
