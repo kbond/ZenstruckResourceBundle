@@ -39,7 +39,7 @@ abstract class AbstractResourceController
         $this->checkPermissions($action);
 
         $entity = $this->createEntity();
-        $form = $this->createForm($entity);
+        $form = $this->createForm($action, $entity);
 
         if ('POST' === $request->getMethod()) {
             if ($form->submit($request)->isValid()) {
@@ -58,7 +58,7 @@ abstract class AbstractResourceController
         $this->checkPermissions($action);
 
         $entity = $this->findEntity($id);
-        $form = $this->createForm($entity);
+        $form = $this->createForm($action, $entity);
 
         if ('PUT' === $request->getMethod()) {
             if ($form->submit($request)->isValid()) {
@@ -228,11 +228,12 @@ abstract class AbstractResourceController
     }
 
     /**
+     * @param $action
      * @param $entity
      *
-     * @return \Symfony\Component\Form\Form
+     * @return Form
      */
-    protected function createForm($entity)
+    protected function createForm($action, $entity)
     {
         $class = $this->resource->getFormClass();
 
