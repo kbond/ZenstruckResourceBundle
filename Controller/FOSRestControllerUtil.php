@@ -46,8 +46,8 @@ class FOSRestControllerUtil extends ControllerUtil
     }
 
     /**
-     * @param null $data
-     * @param null $statusCode
+     * @param null  $data
+     * @param null  $statusCode
      * @param array $headers
      *
      * @return View
